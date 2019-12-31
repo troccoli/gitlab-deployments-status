@@ -21,6 +21,7 @@ export default new Vuex.Store({
           return this;
         })
         .catch(error => {
+          // eslint-disable-next-line no-console
           console.log('There was an error: ', error.response);
         });
     },
