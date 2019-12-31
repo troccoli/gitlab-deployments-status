@@ -17,7 +17,7 @@ export default new Vuex.Store({
     fetchEnvironments({commit}) {
       return GitLabService.getEnvironments()
         .then(response => {
-          commit("SET_ENVIRONMENTS", response.data.data);
+          commit("SET_ENVIRONMENTS", response.data);
           return this;
         })
         .catch(error => {
