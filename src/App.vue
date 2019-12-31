@@ -25,7 +25,7 @@
         />
       </div>
 
-      <v-spacer></v-spacer>
+      <v-spacer/>
 
       <v-btn
         href="https://github.com/vuetifyjs/vuetify/releases/latest"
@@ -38,19 +38,19 @@
     </v-app-bar>
 
     <v-content>
-      <HelloWorld/>
+      <GitLabEnvironments/>
     </v-content>
   </v-app>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld';
+import GitLabEnvironments from "./components/GitLabEnvironments";
 
 export default {
   name: 'App',
 
   components: {
-    HelloWorld,
+    GitLabEnvironments,
   },
 
   data: () => ({
