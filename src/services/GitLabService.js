@@ -16,4 +16,7 @@ export default {
   getEnvironments() {
     return apiClient.get("/projects/" + projectId + "/environments");
   },
+  getEnvironment(environmentId) {
+    return apiClient.get("/projects/" + projectId + "/environments/" + environmentId);
+  }
 };
