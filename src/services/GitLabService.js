@@ -1,12 +1,12 @@
 import axios from "axios";
 
 const apiClient = axios.create({
-  baseURL        : "/api/v4",
+  baseURL        : process.env.VUE_APP_GITLAB_BASE_URL + "/api/v4",
   withCredentials: false,
   headers        : {
     Accept        : "application/json",
     "Content-Type": "application/json",
-    Authorization : "TOKEN",
+    Authorization : process.env.VUE_APP_GITLAB_API_TOKEN,
   }
 });
 
