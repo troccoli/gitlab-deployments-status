@@ -9,15 +9,31 @@ export default new Vuex.Store({
     environments: [],
   },
   mutations: {
-    SET_ENVIRONMENTS(state, environments) {
-      state.environments = environments;
+    CLEAR_ENVIRONMENTS(state) {
+      state.environments = []
     },
+    ADD_ENVIRONMENT(state, environment) {
+      state.environments.push(environment)
+    }
   },
   actions  : {
     fetchEnvironments({commit}) {
+      commit("CLEAR_ENVIRONMENTS")
       return GitLabService.getEnvironments()
         .then(response => {
-          commit("SET_ENVIRONMENTS", response.data);
+          response.data.forEach(function (environment) {
+            let environmentState = environment.state
+            let environmentId = environment.id
+
+            if (environmentState === 'available') {
+              GitLabService.getEnvironment(environmentId)
+                .then(response => {
+                  let environment = response.data
+
+                  commit("ADD_ENVIRONMENT", environment);
+                })
+            }
+          })
           return this;
         })
         .catch(error => {
