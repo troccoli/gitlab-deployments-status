@@ -13,8 +13,23 @@ const apiClient = axios.create({
 const projectId = 39
 
 export default {
-  getEnvironments() {
-    return apiClient.get("/projects/" + projectId + "/environments");
+  async getEnvironments() {
+    let environments = []
+    let page = 1
+
+    try {
+      let response
+      do {
+        response = await apiClient.get("/projects/" + projectId + "/environments?page=" + page++)
+
+        environments = environments.concat(response.data)
+      } while (response.headers['x-next-page'].length !== 0)
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.log(e)
+    }
+
+    return environments
   },
   getEnvironment(environmentId) {
     return apiClient.get("/projects/" + projectId + "/environments/" + environmentId);
