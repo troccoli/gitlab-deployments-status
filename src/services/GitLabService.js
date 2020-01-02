@@ -23,7 +23,7 @@ export default {
         response = await apiClient.get("/projects/" + projectId + "/environments?page=" + page++)
 
         environments = environments.concat(response.data)
-      } while (response.headers['x-next-page'].length !== 0)
+      } while ('x-next-page' in response.headers && response.headers['x-next-page'].length)
     } catch (e) {
       // eslint-disable-next-line no-console
       console.log(e)
