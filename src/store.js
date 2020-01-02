@@ -20,8 +20,8 @@ export default new Vuex.Store({
     fetchEnvironments({commit}) {
       commit("CLEAR_ENVIRONMENTS")
       return GitLabService.getEnvironments()
-        .then(response => {
-          response.data.forEach(function (environment) {
+        .then(environments => {
+          environments.forEach(function (environment) {
             let environmentState = environment.state
             let environmentId = environment.id
 
@@ -38,7 +38,7 @@ export default new Vuex.Store({
         })
         .catch(error => {
           // eslint-disable-next-line no-console
-          console.log('There was an error: ', error.response);
+          console.log('There was an error: ', error);
         });
     },
   }
