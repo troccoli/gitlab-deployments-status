@@ -37,6 +37,9 @@
         </v-card>
       </v-container>
     </v-content>
+    <v-overlay :value=overlay()>
+      <v-progress-circular indeterminate size="64"/>
+    </v-overlay>
   </v-app>
 </template>
 
@@ -49,6 +52,9 @@ import EnvironmentDeployment from "./components/EnvironmentDeployment";
     components: {EnvironmentDeployment, EnvironmentStatus},
     data() {
       return {
+        overlay() {
+          return this.$store.state.isLoading;
+        },
         search : '',
         headers: [
           {
