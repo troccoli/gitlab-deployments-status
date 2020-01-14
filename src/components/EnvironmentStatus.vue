@@ -1,31 +1,33 @@
 <template>
-    <v-chip :color="getColor(value)" dark>{{ value }}</v-chip>
+    <div>
+        <v-chip v-if="status" key="environment-status" :color="color()" dark>{{ status }}</v-chip>
+        <v-skeleton-loader v-else ref="skeleton" type="chip" :boilerplate="boilerplate"/>
+    </div>
 </template>
 
 <script>
   export default {
     name : "EnvironmentStatus",
     props: {
-      value: {
+      status: {
         type    : String,
         required: true,
       }
     },
-    methods: {
-      getColor(value) {
-        if (value === 'success') {
-          return 'green'
-        }
-        if (value === 'failed') {
-          return 'red'
-        }
+    data() {
+      return {
+        boilerplate: true,
+        color() {
+          if (this.status === 'success') {
+            return 'green'
+          }
+          if (this.status === 'failed') {
+            return 'red'
+          }
 
-        return 'gray'
+          return 'gray'
+        }
       }
-    }
+    },
   }
 </script>
-
-<style scoped>
-
-</style>

@@ -6,9 +6,7 @@
             </v-avatar>
             {{ readableDate(deployedAt) }}
         </div>
-        <v-avatar v-else color="grey" size="26">
-            <span class="white--text">NA</span>
-        </v-avatar>
+        <v-skeleton-loader v-else ref="skeleton" type="avatar" :boilerplate="boilerplate"/>
     </div>
 </template>
 
@@ -27,8 +25,9 @@
     },
     data() {
       return {
+        boilerplate: true,
         readableDate(date) {
-          date = new Date(date)
+          date = new Date(date);
           return date.toDateString()
         }
       }
