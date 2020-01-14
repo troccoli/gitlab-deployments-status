@@ -1,7 +1,7 @@
 <template>
     <div>
         <v-chip v-if="status" key="environment-status" :color="color()" dark>{{ status }}</v-chip>
-        <v-skeleton-loader v-else ref="skeleton" type="chip" :boilerplate="boilerplate"/>
+        <v-skeleton-loader v-else ref="skeleton" type="chip" :boilerplate="!loading"/>
     </div>
 </template>
 
@@ -9,14 +9,16 @@
   export default {
     name : "EnvironmentStatus",
     props: {
-      status: {
+      status : {
         type    : String,
         required: true,
-      }
+      },
+      loading: {
+        type: Boolean,
+      },
     },
     data() {
       return {
-        boilerplate: true,
         color() {
           if (this.status === 'success') {
             return 'green'

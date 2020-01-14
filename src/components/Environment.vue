@@ -1,9 +1,22 @@
 <template>
     <tr>
-        <td>{{ environment.name }}</td>
-        <td><EnvironmentBranch :branch="environmentBranch(environment)"/></td>
-        <td><EnvironmentStatus :status="environmentStatus(environment)"/></td>
-        <td><EnvironmentDeployment :triggererIcon="deploymentTrigger(environment)" :deployedAt="deploymentFinishedAt(environment)"/></td>
+        <td>
+            <v-row>
+                <v-switch inset :disabled="disabled" @change="loadEnvironment" class="d-inline"/>
+                <p class="d-inline my-auto">{{ environment.name }}</p>
+            </v-row>
+        </td>
+        <td>
+            <EnvironmentBranch :branch="environmentBranch(environment)" :loading="loading"/>
+        </td>
+        <td>
+            <EnvironmentStatus :status="environmentStatus(environment)" :loading="loading"/>
+        </td>
+        <td>
+            <EnvironmentDeployment :loading="loading"
+                                   :triggererIcon="deploymentTrigger(environment)"
+                                   :deployedAt="deploymentFinishedAt(environment)"/>
+        </td>
     </tr>
 </template>
 
@@ -23,6 +36,8 @@
     },
     data() {
       return {
+        disabled: false,
+        loading : false,
         environmentBranch(environment) {
           let lastDeployment = environment.last_deployment;
 
@@ -43,6 +58,12 @@
 
           return lastDeployment ? lastDeployment.deployable.finished_at : 'NA'
         }
+      }
+    },
+    methods   : {
+      loadEnvironment() {
+        this.disabled = true;
+        this.loading = true;
       }
     }
   }

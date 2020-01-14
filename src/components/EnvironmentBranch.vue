@@ -1,23 +1,21 @@
 <template>
     <div>
-        <p v-if="branch">{{ branch }}</p>
-        <v-skeleton-loader v-else ref="skeleton" type="text" :boilerplate="boilerplate"/>
+        <p v-if="branch" class="my-auto">{{ branch }}</p>
+        <v-skeleton-loader v-else ref="skeleton" type="text" :boilerplate="!loading"/>
     </div>
 </template>
 
 <script>
   export default {
-    name: "EnvironmentBranch",
+    name : "EnvironmentBranch",
     props: {
-      branch: {
+      branch : {
         type: String,
-      }
+      },
+      loading: {
+        type: Boolean,
+      },
     },
-    data() {
-      return {
-        boilerplate: true
-      }
-    }
   }
 </script>
 

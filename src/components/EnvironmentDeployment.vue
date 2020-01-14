@@ -6,26 +6,28 @@
             </v-avatar>
             {{ readableDate(deployedAt) }}
         </div>
-        <v-skeleton-loader v-else ref="skeleton" type="avatar" :boilerplate="boilerplate"/>
+        <v-skeleton-loader v-else ref="skeleton" type="avatar" :boilerplate="!loading"/>
     </div>
 </template>
 
 <script>
   export default {
-    name: "EnvironmentDeployment",
+    name : "EnvironmentDeployment",
     props: {
-      deployedAt: {
-        type: String,
+      deployedAt   : {
+        type    : String,
         required: true,
       },
       triggererIcon: {
-        type: String,
+        type    : String,
         required: true,
-      }
+      },
+      loading      : {
+        type: Boolean,
+      },
     },
     data() {
       return {
-        boilerplate: true,
         readableDate(date) {
           date = new Date(date);
           return date.toDateString()
