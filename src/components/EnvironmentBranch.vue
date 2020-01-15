@@ -1,7 +1,7 @@
 <template>
     <div>
         <p v-if="branch" class="my-auto">{{ branch }}</p>
-        <v-skeleton-loader v-else ref="skeleton" type="text" :boilerplate="!loading"/>
+        <v-skeleton-loader v-else ref="skeleton" type="list-item" :boilerplate="!loading" style="background-color: transparent"/>
     </div>
 </template>
 
@@ -20,5 +20,7 @@
 </script>
 
 <style scoped>
-
+    .theme--light.v-skeleton-loader >>> .v-skeleton-loader__list-item {
+        background-color: transparent;
+    }
 </style>

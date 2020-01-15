@@ -6,7 +6,7 @@
             </v-avatar>
             {{ readableDate(deployedAt) }}
         </div>
-        <v-skeleton-loader v-else ref="skeleton" type="avatar" :boilerplate="!loading"/>
+        <v-skeleton-loader v-else ref="skeleton" type="list-item-avatar" :boilerplate="!loading"/>
     </div>
 </template>
 
@@ -38,5 +38,7 @@
 </script>
 
 <style scoped>
-
+    .theme--light.v-skeleton-loader >>> .v-skeleton-loader__list-item-avatar {
+        background-color: transparent;
+    }
 </style>

@@ -6,21 +6,12 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state    : {
-    environments: [],
-    totalEnvironments: 0,
-    isLoading: true,
+    environments     : [],
+    isLoading        : true,
   },
   mutations: {
-    CLEAR_ENVIRONMENTS(state) {
-      state.environments = []
-      state.totalEnvironments = 0
-    },
-    SET_TOTAL(state, value) {
-      state.totalEnvironments = value
-    },
-    ADD_ENVIRONMENT(state, environment) {
-      state.environments.push(environment)
-      state.isLoading = state.environments.length < state.totalEnvironments
+    SET_ENVIRONMENTS(state, environments) {
+      state.environments = environments;
     },
     SET_LOADING(state, isLoading) {
       state.isLoading = isLoading
@@ -28,22 +19,15 @@ export default new Vuex.Store({
   },
   actions  : {
     fetchEnvironments({commit}) {
-      commit("SET_LOADING", true)
-      commit("CLEAR_ENVIRONMENTS")
+      commit("SET_LOADING", true);
+      commit("SET_ENVIRONMENTS", []);
       return GitLabService.getEnvironments()
         .then(environments => {
           environments = environments.filter((environment) => {
             return environment.state === 'available'
-          })
-          commit("SET_TOTAL", environments.length)
-          environments.forEach(function (environment) {
-            GitLabService.getEnvironment(environment.id)
-              .then(response => {
-                let environment = response.data
-
-                commit("ADD_ENVIRONMENT", environment);
-              })
-        })
+          });
+          commit("SET_ENVIRONMENTS", environments);
+          commit("SET_LOADING", false);
           return this;
         })
         .catch(error => {
@@ -52,5 +36,18 @@ export default new Vuex.Store({
           commit("SET_LOADING", false)
         });
     },
+    fetchEnvironment({commit}, {environmentId}) {
+      commit("SET_LOADING", true);
+      return GitLabService.getEnvironment(environmentId)
+        .then(response => {
+          commit("SET_LOADING", false);
+          return response
+        })
+        .catch(error => {
+          // eslint-disable-next-line no-console
+          console.log('There was an error: ', error);
+          commit("SET_LOADING", false)
+        })
+    }
   }
 })
