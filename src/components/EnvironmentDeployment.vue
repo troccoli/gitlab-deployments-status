@@ -6,30 +6,32 @@
             </v-avatar>
             {{ readableDate(deployedAt) }}
         </div>
-        <v-avatar v-else color="grey" size="26">
-            <span class="white--text">NA</span>
-        </v-avatar>
+        <v-skeleton-loader v-else ref="skeleton" type="list-item-avatar" :boilerplate="!loading"/>
     </div>
 </template>
 
 <script>
+  import moment from 'moment';
+
   export default {
-    name: "EnvironmentDeployment",
+    name : "EnvironmentDeployment",
     props: {
-      deployedAt: {
-        type: String,
+      deployedAt   : {
+        type    : String,
         required: true,
       },
       triggererIcon: {
-        type: String,
+        type    : String,
         required: true,
-      }
+      },
+      loading      : {
+        type: Boolean,
+      },
     },
     data() {
       return {
         readableDate(date) {
-          date = new Date(date)
-          return date.toDateString()
+          return moment(date).format('Do MMM Y @ HH:mm');
         }
       }
     }
@@ -37,5 +39,7 @@
 </script>
 
 <style scoped>
-
+    .theme--light.v-skeleton-loader >>> .v-skeleton-loader__list-item-avatar {
+        background-color: transparent;
+    }
 </style>

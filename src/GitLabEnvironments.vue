@@ -18,38 +18,26 @@
                   :headers="headers"
                   :items=environments()
                   :search="search"
+                  :loading="isLoading"
           >
             <template v-slot:body="{ items }">
               <tbody>
-              <tr v-for="item in items" :key="item.name">
-                <td>{{ item.name }}</td>
-                <td>{{ environmentBranch(item) }}</td>
-                <td>
-                  <EnvironmentStatus :value="environmentStatus(item)"/>
-                </td>
-                <td>
-                  <EnvironmentDeployment :triggererIcon="deploymentTrigger(item)" :deployedAt="deploymentFinishedAt(item)"/>
-                </td>
-              </tr>
+              <Environment v-for="item in items" :key="item.name" :environment="item"/>
               </tbody>
             </template>
           </v-data-table>
         </v-card>
       </v-container>
     </v-content>
-    <v-overlay :value=overlay()>
-      <v-progress-circular indeterminate size="64"/>
-    </v-overlay>
   </v-app>
 </template>
 
 <script>
-import EnvironmentStatus from "./components/EnvironmentStatus";
-import EnvironmentDeployment from "./components/EnvironmentDeployment";
+import Environment from "./components/Environment";
 
   export default {
     name      : "GitLabEnvironments",
-    components: {EnvironmentDeployment, EnvironmentStatus},
+    components: {Environment},
     data() {
       return {
         overlay() {
@@ -70,26 +58,11 @@ import EnvironmentDeployment from "./components/EnvironmentDeployment";
         environments() {
           return this.$store.state.environments
         },
-        environmentBranch(environment) {
-          let lastDeployment = environment.last_deployment
-
-          return lastDeployment ? lastDeployment.ref : 'NA'
-        },
-        environmentStatus(environment) {
-          let lastDeployment = environment.last_deployment
-
-          return lastDeployment ? lastDeployment.deployable.status : 'NA'
-        },
-        deploymentTrigger(environment) {
-          let lastDeployment = environment.last_deployment
-
-          return lastDeployment ? lastDeployment.user.avatar_url : ''
-        },
-        deploymentFinishedAt(environment) {
-          let lastDeployment = environment.last_deployment
-
-          return lastDeployment ? lastDeployment.deployable.finished_at : 'NA'
-        }
+      }
+    },
+    computed : {
+      isLoading() {
+        return this.$store.state.isLoading;
       }
     },
     created() {
