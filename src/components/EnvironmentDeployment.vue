@@ -11,6 +11,8 @@
 </template>
 
 <script>
+  import moment from 'moment';
+
   export default {
     name : "EnvironmentDeployment",
     props: {
@@ -29,8 +31,7 @@
     data() {
       return {
         readableDate(date) {
-          date = new Date(date);
-          return date.toDateString()
+          return moment(date).format('Do MMM Y @ HH:mm');
         }
       }
     }
