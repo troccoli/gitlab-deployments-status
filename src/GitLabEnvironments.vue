@@ -18,6 +18,7 @@
                   :headers="headers"
                   :items=environments()
                   :search="search"
+                  :loading="isLoading"
           >
             <template v-slot:body="{ items }">
               <tbody>
@@ -28,9 +29,6 @@
         </v-card>
       </v-container>
     </v-content>
-    <v-overlay :value=overlay()>
-      <v-progress-circular indeterminate size="64"/>
-    </v-overlay>
   </v-app>
 </template>
 
@@ -60,6 +58,11 @@ import Environment from "./components/Environment";
         environments() {
           return this.$store.state.environments
         },
+      }
+    },
+    computed : {
+      isLoading() {
+        return this.$store.state.isLoading;
       }
     },
     created() {
