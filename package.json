@@ -1,5 +1,5 @@
 {
-  "name": "shopworks-deployment-status",
+  "name": "gitlab-deployment-status",
   "version": "0.1.0",
   "private": true,
   "scripts": {
