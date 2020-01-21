@@ -2,6 +2,12 @@
 
 ## Project setup
 ```
+cp .env .env.local
+```
+
+Edit `.env.local` to add the URL to your GitLab and your Private Token
+
+```
 npm install
 ```
 
