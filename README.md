@@ -1,4 +1,4 @@
-# shopworks-deployment-status
+# gitlab-deployment-status
 
 ## Project setup
 ```
