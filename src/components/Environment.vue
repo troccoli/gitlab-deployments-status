@@ -2,7 +2,7 @@
     <tr>
         <td>
             <v-row>
-                <v-switch inset :disabled="disabled" @change="loadEnvironment(environment.id)" class="d-inline"/>
+                <v-switch inset :disabled="disabled" @change="loadEnvironment(environment.id)" class="d-inline ml-2"/>
                 <p class="d-inline my-auto">{{ environment.name }}</p>
             </v-row>
         </td>
