@@ -6,6 +6,7 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state    : {
+    projectId : 39,
     environments     : [],
     isLoading        : true,
   },
@@ -18,10 +19,10 @@ export default new Vuex.Store({
     }
   },
   actions  : {
-    fetchEnvironments({commit}) {
+    fetchEnvironments({commit, state}) {
       commit("SET_LOADING", true);
       commit("SET_ENVIRONMENTS", []);
-      return GitLabService.getEnvironments()
+      return GitLabService.getEnvironments(state.projectId)
         .then(environments => {
           environments = environments.filter((environment) => {
             return environment.state === 'available'
@@ -36,9 +37,9 @@ export default new Vuex.Store({
           commit("SET_LOADING", false)
         });
     },
-    fetchEnvironment({commit}, {environmentId}) {
+    fetchEnvironment({commit, state}, {environmentId}) {
       commit("SET_LOADING", true);
-      return GitLabService.getEnvironment(environmentId)
+      return GitLabService.getEnvironment(state.projectId, environmentId)
         .then(response => {
           commit("SET_LOADING", false);
           return response
