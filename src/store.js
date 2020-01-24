@@ -6,42 +6,51 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state    : {
-    projectId : 39,
+    projects     : [],
     environments     : [],
-    isLoading        : true,
   },
   mutations: {
+    SET_PROJECTS(state, projects) {
+      state.projects = projects;
+    },
     SET_ENVIRONMENTS(state, environments) {
       state.environments = environments;
     },
-    SET_LOADING(state, isLoading) {
-      state.isLoading = isLoading
-    }
   },
   actions  : {
-    fetchEnvironments({commit, state}) {
-      commit("SET_LOADING", true);
-      commit("SET_ENVIRONMENTS", []);
-      return GitLabService.getEnvironments(state.projectId)
-        .then(environments => {
-          environments = environments.filter((environment) => {
-            return environment.state === 'available'
+    fetchProjects({commit}) {
+      commit("SET_PROJECTS", []);
+      return GitLabService.getProjects()
+        .then(projects => {
+          projects = projects.filter((project) => {
+            return project['empty_repo'] === false
           });
-          commit("SET_ENVIRONMENTS", environments);
-          commit("SET_LOADING", false);
+          commit("SET_PROJECTS", projects);
           return this;
         })
         .catch(error => {
           // eslint-disable-next-line no-console
           console.log('There was an error: ', error);
-          commit("SET_LOADING", false)
         });
     },
-    fetchEnvironment({commit, state}, {environmentId}) {
-      commit("SET_LOADING", true);
-      return GitLabService.getEnvironment(state.projectId, environmentId)
+    fetchEnvironments({commit}, {projectId}) {
+      commit("SET_ENVIRONMENTS", []);
+      return GitLabService.getEnvironments(projectId)
+        .then(environments => {
+          environments = environments.filter((environment) => {
+            return environment.state === 'available'
+          });
+          commit("SET_ENVIRONMENTS", environments);
+          return this;
+        })
+        .catch(error => {
+          // eslint-disable-next-line no-console
+          console.log('There was an error: ', error);
+        });
+    },
+    fetchEnvironment({commit}, {projectId, environmentId}) {
+      return GitLabService.getEnvironment(projectId, environmentId)
         .then(response => {
-          commit("SET_LOADING", false);
           return response
         })
         .catch(error => {

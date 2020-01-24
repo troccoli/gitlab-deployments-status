@@ -11,6 +11,24 @@ const apiClient = axios.create({
 });
 
 export default {
+  async getProjects() {
+    let projects = []
+    let page = 1
+
+    try {
+      let response
+      do {
+        response = await apiClient.get("/projects?archived=false&page=" + page++)
+
+        projects = projects.concat(response.data)
+      } while ('x-next-page' in response.headers && response.headers['x-next-page'].length)
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.log(e)
+    }
+
+    return projects
+  },
   async getEnvironments(projectId) {
     let environments = []
     let page = 1
