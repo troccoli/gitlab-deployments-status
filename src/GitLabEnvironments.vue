@@ -6,7 +6,7 @@
                     <v-card-title>
                         <div class="mt-4">GitLab Environments Status</div>
                         <v-spacer/>
-                        <v-select :items="projects()"
+                        <v-select :items="projects"
                                   item-text="name_with_namespace"
                                   item-value="id"
                                   label="Project"
@@ -63,9 +63,7 @@
           {text: 'Status'},
           {text: 'Deployment'},
         ],
-        projects() {
-          return this.$store.state.projects;
-        },
+        projects: [],
         environments() {
           return this.$store.state.environments
         },
@@ -84,6 +82,16 @@
     created() {
       this.loadingProjects = true;
       this.$store.dispatch("fetchProjects").then(() => {
+        let projects = this.$store.state.projects;
+        projects.sort(function (a, b) {
+          if (a.name_with_namespace < b.name_with_namespace) {
+            return -1;
+          } else if (a.name_with_namespace > b.name_with_namespace) {
+            return 1;
+          }
+          return 0;
+        });
+        this.projects = projects;
         this.loadingProjects = false;
       });
     },
