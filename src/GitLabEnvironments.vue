@@ -1,50 +1,56 @@
 <template>
-  <v-app>
-    <v-content>
-      <v-container>
-        <v-card>
-          <v-card-title>
-            <div class="mt-4">GitLab Environments Status</div>
-            <v-spacer/>
-            <v-select :items="projects()" label="Project" class="mt-7" @change="loadEnvironments()" v-model="projectId" :loading="loadingProjects"/>
-            <v-spacer/>
-            <v-text-field
-                    v-model="search"
-                    append-icon="search"
-                    label="Search"
-                    single-line
-                    hide-details
-            />
-          </v-card-title>
-          <v-data-table
-                  :headers="headers"
-                  :items=environments()
-                  :search="search"
-                  :loading="loadingEnvironments"
-          >
-            <template v-slot:item="{ item }">
-              <Environment :key="item.name" :environment="item"/>
-            </template>
-          </v-data-table>
-        </v-card>
-      </v-container>
-    </v-content>
-  </v-app>
+    <v-app>
+        <v-content>
+            <v-container>
+                <v-card>
+                    <v-card-title>
+                        <div class="mt-4">GitLab Environments Status</div>
+                        <v-spacer/>
+                        <v-select :items="projects()"
+                                  label="Project"
+                                  class="mt-7"
+                                  @change="loadEnvironments()"
+                                  v-model="projectId"
+                                  :loading="loadingProjects"
+                        />
+                        <v-spacer/>
+                        <v-text-field
+                                v-model="search"
+                                append-icon="search"
+                                label="Search"
+                                single-line
+                                hide-details
+                        />
+                    </v-card-title>
+                    <v-data-table
+                            :headers="headers"
+                            :items=environments()
+                            :search="search"
+                            :loading="loadingEnvironments"
+                    >
+                        <template v-slot:item="{ item }">
+                            <Environment :key="item.name" :environment="item"/>
+                        </template>
+                    </v-data-table>
+                </v-card>
+            </v-container>
+        </v-content>
+    </v-app>
 </template>
 
 <script>
-import Environment from "./components/Environment";
+  import Environment from "./components/Environment";
 
   export default {
     name      : "GitLabEnvironments",
     components: {Environment},
     data() {
       return {
-        loadingProjects: false,
+        loadingProjects    : false,
         loadingEnvironments: false,
-        projectId: null,
-        search : '',
-        headers: [
+        projectId          : null,
+        search             : '',
+        headers            : [
           {
             text    : 'Name',
             align   : 'left',
@@ -58,7 +64,7 @@ import Environment from "./components/Environment";
         projects() {
           return this.$store.state.projects.map(project => {
             return {
-              text: project.name,
+              text : project.name,
               value: project.id,
             };
           });
@@ -68,7 +74,7 @@ import Environment from "./components/Environment";
         },
       }
     },
-    methods: {
+    methods   : {
       loadEnvironments() {
         this.loadingEnvironments = true;
         this.$store.dispatch("fetchEnvironments", {
