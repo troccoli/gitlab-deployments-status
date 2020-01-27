@@ -6,7 +6,7 @@
                     <v-card-title>
                         <div class="mt-4">GitLab Environments Status</div>
                         <v-spacer/>
-                        <v-select :items="projects"
+                        <v-autocomplete :items="projects"
                                   item-text="name_with_namespace"
                                   item-value="id"
                                   label="Project"
