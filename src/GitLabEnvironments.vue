@@ -7,6 +7,8 @@
                         <div class="mt-4">GitLab Environments Status</div>
                         <v-spacer/>
                         <v-select :items="projects()"
+                                  item-text="name_with_namespace"
+                                  item-value="id"
                                   label="Project"
                                   class="mt-7"
                                   @change="loadEnvironments()"
@@ -62,12 +64,7 @@
           {text: 'Deployment'},
         ],
         projects() {
-          return this.$store.state.projects.map(project => {
-            return {
-              text : project.name,
-              value: project.id,
-            };
-          });
+          return this.$store.state.projects;
         },
         environments() {
           return this.$store.state.environments
