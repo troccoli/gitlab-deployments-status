@@ -2,7 +2,7 @@
     <tr>
         <td>
             <v-row>
-                <v-switch inset :disabled="disabled" @change="loadEnvironment(environment.id)" class="d-inline"/>
+                <v-switch inset :disabled="disabled" @change="loadEnvironment(environment)" class="d-inline ml-2"/>
                 <p class="d-inline my-auto">{{ environment.name }}</p>
             </v-row>
         </td>
@@ -39,7 +39,6 @@
         disabled: false,
         loading : false,
         environmentRef: null,
-        environmentId: null,
         deployableStatus: null,
         userAvatarUrl: null,
         deployableFinishedAt: null,
@@ -60,12 +59,13 @@
       }
     },
     methods   : {
-      loadEnvironment(environmentId) {
+      loadEnvironment(environment) {
         this.disabled = true;
         this.loading = true;
 
         this.$store.dispatch("fetchEnvironment", {
-          environmentId: environmentId
+          projectId: environment.project.id,
+          environmentId: environment.id
         }).then(response => {
           let lastDeployment = response.data.last_deployment;
 

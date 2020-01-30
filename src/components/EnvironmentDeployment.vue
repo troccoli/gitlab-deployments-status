@@ -31,7 +31,7 @@
     data() {
       return {
         readableDate(date) {
-          return moment(date).format('Do MMM Y @ HH:mm');
+          return moment(date).format('dddd, MMMM Do YYYY, h:mm:ss a');
         }
       }
     }

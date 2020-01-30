@@ -1,50 +1,58 @@
 <template>
-  <v-app>
-    <v-content>
-      <v-container>
-        <v-card>
-          <v-card-title>
-            GitLab Environments Status
-            <v-spacer/>
-            <v-text-field
-                    v-model="search"
-                    append-icon="search"
-                    label="Search"
-                    single-line
-                    hide-details
-            />
-          </v-card-title>
-          <v-data-table
-                  :headers="headers"
-                  :items=environments()
-                  :search="search"
-                  :loading="isLoading"
-          >
-            <template v-slot:body="{ items }">
-              <tbody>
-              <Environment v-for="item in items" :key="item.name" :environment="item"/>
-              </tbody>
-            </template>
-          </v-data-table>
-        </v-card>
-      </v-container>
-    </v-content>
-  </v-app>
+    <v-app>
+        <v-content>
+            <v-container>
+                <v-card>
+                    <v-card-title>
+                        <div class="mt-4">GitLab Environments Status</div>
+                        <v-spacer/>
+                        <v-autocomplete :items="projects"
+                                  item-text="name_with_namespace"
+                                  item-value="id"
+                                  label="Project"
+                                  class="mt-7"
+                                  @change="loadEnvironments()"
+                                  v-model="projectId"
+                                  :loading="loadingProjects"
+                        />
+                        <v-spacer/>
+                        <v-text-field
+                                v-model="search"
+                                append-icon="search"
+                                label="Search"
+                                single-line
+                                hide-details
+                        />
+                    </v-card-title>
+                    <v-data-table
+                            :headers="headers"
+                            :items=environments()
+                            :search="search"
+                            :loading="loadingEnvironments"
+                    >
+                        <template v-slot:item="{ item }">
+                            <Environment :key="item.name" :environment="item"/>
+                        </template>
+                    </v-data-table>
+                </v-card>
+            </v-container>
+        </v-content>
+    </v-app>
 </template>
 
 <script>
-import Environment from "./components/Environment";
+  import Environment from "./components/Environment";
 
   export default {
     name      : "GitLabEnvironments",
     components: {Environment},
     data() {
       return {
-        overlay() {
-          return this.$store.state.isLoading;
-        },
-        search : '',
-        headers: [
+        loadingProjects    : false,
+        loadingEnvironments: false,
+        projectId          : null,
+        search             : '',
+        headers            : [
           {
             text    : 'Name',
             align   : 'left',
@@ -55,18 +63,37 @@ import Environment from "./components/Environment";
           {text: 'Status'},
           {text: 'Deployment'},
         ],
+        projects: [],
         environments() {
           return this.$store.state.environments
         },
       }
     },
-    computed : {
-      isLoading() {
-        return this.$store.state.isLoading;
-      }
+    methods   : {
+      loadEnvironments() {
+        this.loadingEnvironments = true;
+        this.$store.dispatch("fetchEnvironments", {
+          projectId: this.projectId,
+        }).then(() => {
+          this.loadingEnvironments = false;
+        });
+      },
     },
     created() {
-      this.$store.dispatch("fetchEnvironments");
+      this.loadingProjects = true;
+      this.$store.dispatch("fetchProjects").then(() => {
+        let projects = this.$store.state.projects;
+        projects.sort(function (a, b) {
+          if (a.name_with_namespace < b.name_with_namespace) {
+            return -1;
+          } else if (a.name_with_namespace > b.name_with_namespace) {
+            return 1;
+          }
+          return 0;
+        });
+        this.projects = projects;
+        this.loadingProjects = false;
+      });
     },
   }
 </script>
