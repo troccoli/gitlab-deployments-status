@@ -2,9 +2,12 @@
     <tr>
         <td>
             <v-row>
-                <v-switch inset :disabled="disabled" @change="loadEnvironment(environment)" class="d-inline ml-2"/>
+                <v-switch inset :disabled="disabled" @change="loadEnvironment(date)" class="d-inline ml-2"/>
                 <p class="d-inline my-auto">{{ environment.name }}</p>
             </v-row>
+        </td>
+        <td>
+            <EnvironmentDate @update-date="loadEnvironment" :show-it="disabled" :loading="loading"/>
         </td>
         <td>
             <EnvironmentBranch :branch="branchName" :loading="loading"/>
@@ -24,10 +27,11 @@
   import EnvironmentBranch from "./EnvironmentBranch";
   import EnvironmentStatus from "./EnvironmentStatus";
   import EnvironmentDeployment from "./EnvironmentDeployment";
+  import EnvironmentDate from "./EnvironmentDate";
 
   export default {
     name      : "Environment",
-    components: {EnvironmentDeployment, EnvironmentStatus, EnvironmentBranch},
+    components: {EnvironmentDate, EnvironmentDeployment, EnvironmentStatus, EnvironmentBranch},
     props     : {
       environment: {
         type    : Object,
@@ -36,15 +40,16 @@
     },
     data() {
       return {
-        disabled: false,
-        loading : false,
-        environmentRef: null,
-        deployableStatus: null,
-        userAvatarUrl: null,
+        disabled            : false,
+        loading             : false,
+        environmentRef      : null,
+        date                : null,
+        deployableStatus    : null,
+        userAvatarUrl       : null,
         deployableFinishedAt: null,
       }
     },
-    computed : {
+    computed  : {
       branchName() {
         return this.environmentRef || '';
       },
@@ -56,18 +61,24 @@
       },
       deployedAt() {
         return this.deployableFinishedAt || '';
+      },
+    },
+    watch     : {
+      date: function () {
+        this.loadEnvironmentFromDate(this.environment, this.date)
       }
     },
     methods   : {
-      loadEnvironment(environment) {
+      loadEnvironmentFromDate(environment, fromDate) {
         this.disabled = true;
         this.loading = true;
 
         this.$store.dispatch("fetchEnvironment", {
-          projectId: environment.project.id,
-          environmentId: environment.id
+          projectId    : environment.project.id,
+          environment: environment.name,
+          updatedBefore: fromDate
         }).then(response => {
-          let lastDeployment = response.data.last_deployment;
+          let lastDeployment = response.data[0];
 
           if (lastDeployment) {
             this.environmentRef = lastDeployment.ref;
@@ -82,11 +93,24 @@
           console.log('There was an error: ', error);
           this.loading = false;
         })
+      },
+      loadEnvironment(date) {
+        if (date === null) {
+          date = (new Date()).toISOString().split('T')[0]
+        }
+        this.date = date;
       }
     }
   }
 </script>
 
 <style scoped>
+    td {
+        padding-left: 8px !important;
+        padding-right: 0 !important;
+    }
 
+    td:first-child {
+        padding-left: 16px !important;
+    }
 </style>

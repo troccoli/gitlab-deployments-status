@@ -48,8 +48,8 @@ export default new Vuex.Store({
           console.log('There was an error: ', error);
         });
     },
-    fetchEnvironment({commit}, {projectId, environmentId}) {
-      return GitLabService.getEnvironment(projectId, environmentId)
+    fetchEnvironment({commit}, {projectId, environment, updatedBefore}) {
+      return GitLabService.getEnvironment(projectId, environment, updatedBefore)
         .then(response => {
           return response
         })

@@ -57,11 +57,21 @@
             text    : 'Name',
             align   : 'left',
             sortable: false,
-            value   : 'name'
+            value   : 'name',
+            class   : 'header'
           },
-          {text: 'Branch', value: 'branch'},
-          {text: 'Status'},
-          {text: 'Deployment'},
+          {
+            text    : 'From',
+            sortable: false,
+            value   : 'from',
+            class   : 'header'
+          },
+          {text: 'Branch', value: 'branch',
+            class   : 'header'},
+          {text: 'Status',
+            class   : 'header'},
+          {text: 'Deployment',
+            class   : 'header'},
         ],
         projects: [],
         environments() {
@@ -84,6 +94,14 @@
       this.$store.dispatch("fetchProjects").then(() => {
         let projects = this.$store.state.projects;
         projects.sort(function (a, b) {
+          if (a.name_with_namespace === 'shopworks / shopworks') {
+            return -1;
+          }
+
+          if (b.name_with_namespace === 'shopworks / shopworks') {
+            return 1;
+          }
+
           if (a.name_with_namespace < b.name_with_namespace) {
             return -1;
           } else if (a.name_with_namespace > b.name_with_namespace) {
@@ -97,3 +115,10 @@
     },
   }
 </script>
+
+<style scoped>
+    .v-data-table > th {
+        padding-left: 8px !important;
+        padding-right: 0 !important;
+    }
+</style>
