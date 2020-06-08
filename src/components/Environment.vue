@@ -24,6 +24,7 @@
 </template>
 
 <script>
+  import moment from 'moment';
   import EnvironmentBranch from "./EnvironmentBranch";
   import EnvironmentStatus from "./EnvironmentStatus";
   import EnvironmentDeployment from "./EnvironmentDeployment";
@@ -65,7 +66,9 @@
     },
     watch     : {
       date: function () {
-        this.loadEnvironmentFromDate(this.environment, this.date)
+          // eslint-disable-next-line no-console
+          console.log(this.date);
+        this.loadEnvironmentFromDate(this.environment, moment(this.date).add(1, 'day').toDate())
       }
     },
     methods   : {
