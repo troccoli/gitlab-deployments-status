@@ -47,9 +47,6 @@ export default {
 
     return environments
   },
-  getLatestEnvironment(projectId, environmentId) {
-    return apiClient.get("/projects/" + projectId + "/environments/" + environmentId);
-  },
   getEnvironment(projectId, environmentName, cutoffDate) {
     const queryString = "status=success&order_by=created_at&sort=desc" +
       "&environment=" + environmentName +
