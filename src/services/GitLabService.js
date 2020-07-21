@@ -11,6 +11,22 @@ const apiClient = axios.create({
 });
 
 export default {
+  async getStarredProjects() {
+    let projects = []
+
+    try {
+      let response = await apiClient.get("/user");
+      let user = response.data;
+
+      response = await apiClient.get("/users/" + user.id + "/starred_projects");
+      projects = response.data;
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.log(e)
+    }
+
+    return projects;
+  },
   async getProjects() {
     let projects = []
     let page = 1

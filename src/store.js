@@ -6,10 +6,14 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state    : {
+    starredProjects : [],
     projects     : [],
     environments     : [],
   },
   mutations: {
+    SET_STARRED_PROJECTS(state, projects) {
+      state.starredProjects = projects;
+    },
     SET_PROJECTS(state, projects) {
       state.projects = projects;
     },
@@ -18,6 +22,18 @@ export default new Vuex.Store({
     },
   },
   actions  : {
+    fetchStarredProjects({commit}) {
+      commit("SET_STARRED_PROJECTS", []);
+      return GitLabService.getStarredProjects()
+          .then(projects => {
+            commit("SET_STARRED_PROJECTS", projects);
+            return this;
+          })
+          .catch(error => {
+            // eslint-disable-next-line no-console
+            console.log('There was an error: ', error);
+          });
+    },
     fetchProjects({commit}) {
       commit("SET_PROJECTS", []);
       return GitLabService.getProjects()

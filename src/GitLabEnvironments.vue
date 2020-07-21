@@ -91,27 +91,31 @@
     },
     created() {
       this.loadingProjects = true;
-      this.$store.dispatch("fetchProjects").then(() => {
-        let projects = this.$store.state.projects;
-        projects.sort(function (a, b) {
-          if (a.name_with_namespace === 'shopworks / shopworks') {
-            return -1;
-          }
+      this.$store.dispatch("fetchStarredProjects").then(() => {
+          this.$store.dispatch("fetchProjects").then(() => {
+              let starred = this.$store.state.starredProjects.map(project => {
+                  return project.name_with_namespace;
+              });
+              let projects = this.$store.state.projects;
+              projects.sort(function (a, b) {
+                  if (starred.includes(a.name_with_namespace) && !starred.includes(b.name_with_namespace)) {
+                      return -1;
+                  }
+                  if (!starred.includes(a.name_with_namespace) && starred.includes(b.name_with_namespace)) {
+                      return 1;
+                  }
 
-          if (b.name_with_namespace === 'shopworks / shopworks') {
-            return 1;
-          }
-
-          if (a.name_with_namespace < b.name_with_namespace) {
-            return -1;
-          } else if (a.name_with_namespace > b.name_with_namespace) {
-            return 1;
-          }
-          return 0;
-        });
-        this.projects = projects;
-        this.loadingProjects = false;
-      });
+                  if (a.name_with_namespace < b.name_with_namespace) {
+                      return -1;
+                  } else if (a.name_with_namespace > b.name_with_namespace) {
+                      return 1;
+                  }
+                  return 0;
+              });
+              this.projects = projects;
+              this.loadingProjects = false;
+          });
+      })
     },
   }
 </script>
