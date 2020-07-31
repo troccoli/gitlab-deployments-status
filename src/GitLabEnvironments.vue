@@ -4,7 +4,7 @@
             <v-container>
                 <v-card>
                     <v-card-title>
-                        <div class="mt-4">GitLab Environments Status</div>
+                        <div class="mt-4" data-cy="app-title">GitLab Environments Status</div>
                         <v-spacer/>
                         <v-autocomplete :items="projects"
                                   item-text="name_with_namespace"
