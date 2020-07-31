@@ -1,0 +1,22 @@
+name: lint
+
+on: [push]
+
+jobs:
+  unit-test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        node: [12]
+    name: OS ${{ matrix.os }} - Node v${{ matrix.node }}
+    steps:
+      - name: Setup Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node }}
+      - name: Checkout
+        uses: actions/checkout@v2
+      - run: npm ci
+      - run: npm run build --if-present
+      - run: npm run lint
