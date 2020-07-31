@@ -1,0 +1,29 @@
+name: cypress
+
+on: [push]
+
+jobs:
+  cypress-run:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        node: [12, 14]
+    name: OS ${{ matrix.os }} - Node v${{ matrix.node }}
+    steps:
+      - name: Setup Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node }}
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Cypress run
+        uses: cypress-io/github-action@v2
+        with:
+          start: npm run serve
+          wait-on: http://localhost:8080/
+          config-file: cypress.json
+          spec: "tests/e2e/**/*"
+          quiet: true
+        env:
+          CYPRESS_baseUrl: http://localhost:8080/
