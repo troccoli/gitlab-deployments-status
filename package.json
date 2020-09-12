@@ -27,7 +27,7 @@
     "cypress-cy-select": "^0.2.2",
     "eslint": "^7.8.1",
     "eslint-plugin-cypress": "^2.11.1",
-    "eslint-plugin-vue": "^5.0.0",
+    "eslint-plugin-vue": "^5.2.3",
     "sass": "^1.26.10",
     "sass-loader": "^8.0.2",
     "vue-cli-plugin-vuetify": "^2.0.7",
