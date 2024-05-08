@@ -4,26 +4,41 @@ on: [push]
 
 jobs:
   cypress-run:
+
     runs-on: ${{ matrix.os }}
+
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-        node: [12, 14]
-    name: OS ${{ matrix.os }} - Node v${{ matrix.node }}
+        node: [18, 20, 22]
+        browser: [chrome, firefox, edge]
+        exclude:
+          - os: ubuntu-latest
+            browser: edge
+          - os: macos-latest
+            browser: firefox
+          - os: macos-latest
+            browser: edge
+
+    name: OS ${{ matrix.os }} - Node v${{ matrix.node }} - Browser ${{ matrix.browser }}
+
     steps:
       - name: Setup Node
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node }}
+
       - name: Checkout
-        uses: actions/checkout@v1
+        uses: actions/checkout@v4
+
       - name: Cypress run
-        uses: cypress-io/github-action@v2
+        uses: cypress-io/github-action@v6
         with:
-          start: npm run serve
+          build: npm run build
+          start: npm run preview
           wait-on: http://localhost:8080/
-          config-file: cypress.json
-          spec: "tests/e2e/**/*"
+          browser: ${{ matrix.browser }}
+          config-file: cypress.config.js
+          config: baseUrl=http://localhost:8080
+          spec: "cypress/e2e/**/*"
           quiet: true
-        env:
-          CYPRESS_baseUrl: http://localhost:8080/
