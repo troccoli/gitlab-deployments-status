@@ -1,15 +1,17 @@
 <script setup>
-import { computed, ref, watch } from 'vue'
+import { computed, inject, ref, watch } from 'vue'
 import moment from 'moment'
 import EnvironmentDate from '@/components/EnvironmentDate.vue'
 
-defineProps({
+const props = defineProps({
   projectId: Number,
   environment: {
     type: Object,
     required: true,
   },
 })
+
+const GitLabService = inject('GitLabService')
 
 let date = ref(null)
 let loading = ref(false)
@@ -37,24 +39,10 @@ watch(date, () => {
   loading.value = true
 
   // Get the deployments, with environment and date
-  lastDeployment.value = fetchLastDeployment()
+  lastDeployment.value = GitLabService.getEnvironment(props.projectId, props.environment.name, date.value)
 
   loading.value = false
 })
-
-function fetchLastDeployment () {
-  return {
-    'status': 'created',
-    'deployable': {
-      'finished_at': '2016-08-11T07:36:39.851Z',
-      'status': 'success',
-    },
-    'ref': 'main',
-    'user': {
-      'avatar_url': 'https://gravatar.com/avatar/61ae23714ab1ebad1b3f6926c61fb4a8?size=40&cache=1715069505063',
-    },
-  }
-}
 </script>
 
 <template>

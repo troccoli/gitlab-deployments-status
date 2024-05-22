@@ -1,3 +1,42 @@
+<script setup>
+import { inject, onMounted, ref } from 'vue'
+import ProjectEnvironments from '@/components/ProjectEnvironments.vue'
+
+const GitLabService = inject('GitLabService')
+
+let projects = ref([])
+let loadingProjects = ref(false)
+let search = ref('')
+
+let projectId = ref(null)
+
+onMounted(() => {
+  loadingProjects.value = true
+  let starredProjects = GitLabService.getStarredProjects()
+  let allProjects = GitLabService.getProjects()
+
+  starredProjects = starredProjects.map(p => p.name_with_namespace)
+  allProjects.sort(function (a, b) {
+    if (starredProjects.includes(a.name_with_namespace) && !starredProjects.includes(b.name_with_namespace)) {
+      return -1
+    }
+    if (!starredProjects.includes(a.name_with_namespace) && starredProjects.includes(b.name_with_namespace)) {
+      return 1
+    }
+
+    if (a.name_with_namespace < b.name_with_namespace) {
+      return -1
+    } else if (a.name_with_namespace > b.name_with_namespace) {
+      return 1
+    }
+    return 0
+  })
+
+  projects.value = allProjects
+  loadingProjects.value = false
+})
+</script>
+
 <template>
   <v-app>
     <v-main>
@@ -39,58 +78,3 @@
     </v-main>
   </v-app>
 </template>
-
-<script setup>
-import { onMounted, ref } from 'vue'
-import ProjectEnvironments from '@/components/ProjectEnvironments.vue'
-
-let projects = ref([])
-let loadingProjects = ref(false)
-let search = ref('')
-
-let projectId = ref(null)
-
-onMounted(() => {
-  loadingProjects.value = true
-  let starredProjects = [
-    {
-      'id': 6,
-      'name_with_namespace': 'Diaspora / Diaspora Client',
-    },
-  ]
-  let allProjects = [
-    {
-      'id': 4,
-      'name_with_namespace': 'Diaspora / Diaspora Client',
-    },
-    {
-      'id': 3,
-      'name_with_namespace': 'Aroccoli / My Gym Pal',
-    },
-    {
-      'id': 6,
-      'name_with_namespace': 'Brightbox / Puppet',
-    },
-  ]
-
-  starredProjects = starredProjects.map(p => p.name_with_namespace)
-  allProjects.sort(function (a, b) {
-    if (starredProjects.includes(a.name_with_namespace) && !starredProjects.includes(b.name_with_namespace)) {
-      return -1
-    }
-    if (!starredProjects.includes(a.name_with_namespace) && starredProjects.includes(b.name_with_namespace)) {
-      return 1
-    }
-
-    if (a.name_with_namespace < b.name_with_namespace) {
-      return -1
-    } else if (a.name_with_namespace > b.name_with_namespace) {
-      return 1
-    }
-    return 0
-  })
-
-  projects.value = allProjects
-  loadingProjects.value = false
-})
-</script>

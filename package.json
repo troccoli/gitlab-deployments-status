@@ -21,6 +21,7 @@
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.0.4",
+    "axios-mock-adapter": "^1.22.0",
     "cypress": "^13.10.0",
     "cypress-cy-select": "^0.2.3",
     "eslint": "^8.57.0",

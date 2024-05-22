@@ -1,11 +1,13 @@
 <script setup>
-import { ref } from 'vue'
+import { inject, ref } from 'vue'
 import EnvironmentLastDeployment from '@/components/EnvironmentLastDeployment.vue'
 
 defineProps({
   projectId: Number,
   search: String,
 })
+
+const GitLabService = inject('GitLabService')
 
 let loading = ref(false)
 
@@ -19,29 +21,7 @@ let headers = [
 ]
 
 function environments (projectId) {
-  let environments = []
-  if (projectId === 6) {
-    environments = [
-      {
-        'id': 1,
-        'name': 'fix/fix-foo',
-      },
-      {
-        'id': 2,
-        'name': 'feature/new-feature',
-      },
-      {
-        'id': 5,
-        'name': 'fix/nasty-bug',
-      },
-      {
-        'id': 12,
-        'name': 'fix/stupid-bug',
-      },
-    ]
-  }
-
-  return environments
+  return GitLabService.getEnvironments(projectId)
 }
 </script>
 
