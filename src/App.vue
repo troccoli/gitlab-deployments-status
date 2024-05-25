@@ -1,8 +1,10 @@
 <script setup>
-import { inject, onMounted, ref } from 'vue'
+import {onMounted, ref} from 'vue'
 import ProjectEnvironments from '@/components/ProjectEnvironments.vue'
+import {useProjectsStore} from "@/stores/projects"
+import {sortProjects} from "@/utilities/sorting";
 
-const GitLabService = inject('GitLabService')
+const store = useProjectsStore()
 
 let projects = ref([])
 let loadingProjects = ref(false)
@@ -12,28 +14,12 @@ let projectId = ref(null)
 
 onMounted(() => {
   loadingProjects.value = true
-  let starredProjects = GitLabService.getStarredProjects()
-  let allProjects = GitLabService.getProjects()
 
-  starredProjects = starredProjects.map(p => p.name_with_namespace)
-  allProjects.sort(function (a, b) {
-    if (starredProjects.includes(a.name_with_namespace) && !starredProjects.includes(b.name_with_namespace)) {
-      return -1
-    }
-    if (!starredProjects.includes(a.name_with_namespace) && starredProjects.includes(b.name_with_namespace)) {
-      return 1
-    }
-
-    if (a.name_with_namespace < b.name_with_namespace) {
-      return -1
-    } else if (a.name_with_namespace > b.name_with_namespace) {
-      return 1
-    }
-    return 0
-  })
-
-  projects.value = allProjects
-  loadingProjects.value = false
+  store.fetchStarredProjects().then(() => {
+    store.fetchProjects().then(() => {
+      projects.value = sortProjects(store.allProjects, store.starredProjects);
+    });
+  }).finally(() => loadingProjects.value = false)
 })
 </script>
 
@@ -72,7 +58,7 @@ onMounted(() => {
               </v-row>
             </v-container>
           </v-card-title>
-          <ProjectEnvironments :project-id="projectId" :search="search"/>
+          <ProjectEnvironments :projectId="projectId" :search="search"/>
         </v-card>
       </v-container>
     </v-main>

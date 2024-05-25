@@ -5,7 +5,7 @@
 cp .env .env.local
 ```
 
-Edit `.env.local` to add the URL to your GitLab and your Private Token
+Edit `.env.local` to add your GitLab Private Token
 
 ```
 npm install
@@ -17,7 +17,7 @@ You can run the project in two modes: development or production.
 
 ### Development
 
-In development mode, the calls to the GitLab APIs are mocked and therefore you don't need to set the env variables
+In development mode, the calls to the GitLab APIs are mocked and therefore you don't need to set the private token
 in `.env.local`.
 
 #### Compiles and hot-reloads for development
@@ -29,7 +29,7 @@ During development you may also want to lint your files before committing with `
 
 ### Production
 
-In production mode, the GitLab APIs are called and therefore it's imperative that the env variables is `.env.local` are
+In production mode, the GitLab APIs are called and therefore it's imperative that the private token in `.env.local` is
 set and correct.
 
 #### Compiles, minifies and run for production
