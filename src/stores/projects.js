@@ -36,10 +36,6 @@ export const useProjectsStore = defineStore('projects', () => {
             });
     }
 
-    function fetchEnvironments(projectId) {
-
-    }
-
     return {
         allProjects, starredProjects,
         fetchProjects, fetchStarredProjects
