@@ -1,12 +1,30 @@
-import Vue from 'vue'
-import GitLabEnvironments from "./GitLabEnvironments";
-import vuetify from './plugins/vuetify';
-import store from "./store";
+/**
+ * main.js
+ *
+ * Bootstraps Vuetify and other plugins then mounts the App`
+ */
 
-Vue.config.productionTip = false
+// Plugins
+import {registerPlugins} from '@/plugins'
 
-new Vue({
-  vuetify,
-  store,
-  render: h => h(GitLabEnvironments)
-}).$mount('#app')
+// Components
+import App from './App.vue'
+
+// Services
+import GitLabService from "@/services/GitLabService"
+import MockGitLabService from "@/services/MockGitLabService"
+
+// Application
+import {createApp} from 'vue'
+
+const app = createApp(App)
+
+registerPlugins(app)
+
+app.provide('GitLabService', GitLabService)
+
+if (!import.meta.env.PROD) {
+    MockGitLabService.mock(GitLabService.client())
+}
+
+app.mount('#app')
