@@ -22,7 +22,6 @@ let readableDate = computed(() => moment(cutOffDate.value).format('ddd, ll'))
         variant="underlined"
         v-model="cutOffDate"
         :max="new Date()"
-        readonly
         hide-details
         id="input-field"
         @update:modelValue="$emit('update-date', cutOffDate)"
