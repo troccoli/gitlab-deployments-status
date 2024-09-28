@@ -1,6 +1,5 @@
 {
   "name": "gitlab-deployments-status",
-  "version": "1.1",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
